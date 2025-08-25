@@ -20,7 +20,7 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 - **Estrutura de Dados**  
 - **Programação Orientada a Objetos**
 
-### ✅ 4º Período
+### ✅ [4º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/4%20Semestre)
 - **Banco de Dados I**  
 - **Programação Web**
 
