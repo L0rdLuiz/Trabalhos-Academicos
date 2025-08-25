@@ -1,0 +1,165 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+}
+
+header {
+    background-color: white;
+    padding: 10px 40px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.logo-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.logo-content img {
+    height: 40px;
+}
+
+
+.logo-content h1 {
+    font-size: 28px;  
+    color: #4c2e1d;
+    margin: 0;
+}
+
+.logo-content a {
+  text-decoration: none;
+  color: #333;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+nav .btn {
+    background-color: #49a6b4;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+}
+
+nav .btn:hover {
+    background-color: #3a8a95;
+}
+
+nav a:not(.btn) {
+    color: #49a6b4;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:not(.btn):hover {
+    color: #357c85;
+}
+
+
+.topo {
+  display: flex;        
+  align-items: center;    
+  justify-content: center;
+  gap: 40px;             
+  padding: 40px;
+}
+
+
+.topo img {
+  width: 600px;           
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+
+.topo .texto {
+  max-width: 800px;       
+  text-align: center;     
+}
+.topo h1 {
+  color: #48a6a8;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.nossos-parceiros {
+  background-color: #e6f7f8;
+  padding: 40px;
+  text-align: center;
+}
+
+.nossos-parceiros h2 {
+  color: #48a6a8;
+  font-size: 26px;
+  margin-bottom: 30px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  flex: 1 1 calc(33.333% - 40px);
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+  max-width: 350px;
+  border-radius: 30px;
+
+
+
+}
+
+.ultimo-card {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  border-radius: 30px;
+}
+
+.card h3 {
+  color: #48a6a8;
+  margin-bottom: 10px;
+}
+
+p{
+  text-align: justify;
+  line-height: 1.15;
+
+
+}
+.card img {
+  width: 100%;
+  height: auto;
+  max-height: 301px; 
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+p{
+  color: #48a6a8;
+}

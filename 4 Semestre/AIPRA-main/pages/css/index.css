@@ -1,0 +1,235 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  color: #333;
+}
+
+header {
+    background-color: white;
+    padding: 10px 40px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.logo-content img {
+    height: 40px;
+}
+
+
+.logo-content h1 {
+    font-size: 28px;  
+    color: #4c2e1d;
+    margin: 0;
+}
+
+.logo-content a {
+  text-decoration: none;
+  color: #333;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+nav .btn {
+    background-color: #49a6b4;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+}
+
+nav .btn:hover {
+    background-color: #3a8a95;
+}
+
+nav a:not(.btn) {
+    color: #49a6b4;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:not(.btn):hover {
+    color: #357c85;
+}
+
+.banner {
+  background-image: url('/img/foto21cris.jpg'); 
+  background-size: cover;
+  background-position: center;
+  padding: 60px 40px;
+  min-height: 350px;
+  border-radius: 16px;
+  position: relative;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 40px 60px;
+}
+
+.banner::before {
+  content: "";
+  background-color: rgba(0, 0, 0, 0.5); 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  z-index: 0;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.dog-img img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 4px dashed #7dd6de;
+  object-fit: cover;
+  padding: 6px;
+  background-color: white;
+}
+
+.text-content h2 {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #49a6b4;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #3a8a95;
+}
+
+.sobre {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.sobre h2 {
+  color: #593e3e;
+  font-size: 22px;
+}
+
+.subtexto {
+  margin: 10px auto 30px;
+  max-width: 600px;
+  font-size: 14px;
+  color: #777;
+}
+
+.cards{
+  display:flex;
+  justify-content:space-between;
+  gap:2rem;
+  flex-wrap:wrap;
+  padding:2rem 0;
+}
+
+.card{
+  flex:1 1 250px;
+  text-align:center;
+  font-family: "Poppins", sans-serif;
+}
+
+.icon{
+  --size:120px;
+  width:var(--size);
+  height:var(--size);
+  margin:0 auto 1rem;
+  background:#e8f8fa;
+  border-radius:50%;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 8px rgba(0,0,0,.15);
+}
+
+.icon img{
+  max-width:60%;
+  height:auto;
+}
+
+.icon img + img{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:60%;
+  transform:translate(-50%,-50%);
+}
+
+.card h3{
+  font-size:1.1rem;
+  margin:0 0 .5rem;
+  color:#4a3b32;
+}
+
+.card p{
+  font-size:.95rem;
+  line-height:1.4;
+  color:#726258;
+  max-width:22ch;
+  margin:0 auto;
+}
+
+.video-section {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.video-box {
+  background-color: #593e3e;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.video-box iframe {
+  width: 500px;
+  height: 280px;
+  border-radius: 8px;
+}
