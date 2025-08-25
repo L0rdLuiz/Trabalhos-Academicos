@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1733083496 source:c:\users\luiz antonio\documents\aula estrutura\algoritmos de ordenação - m3 trabalho\main.cpp
+	<iostream>
+	<locale>
+	<cstdlib>
+	<ctime>
+	<chrono>
+
