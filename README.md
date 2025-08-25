@@ -10,7 +10,7 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 
 ## 🧠 Disciplinas com foco em programação
 
-### ✅ 1º Período
+### ✅ [1º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/1%20Semestre)
 - **Algoritmos e Programação I**
 
 ### ✅ 2º Período
