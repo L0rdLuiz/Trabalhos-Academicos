@@ -13,7 +13,7 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 ### ✅ [1º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/1%20Semestre)
 - **Algoritmos e Programação I**
 
-### ✅ 2º Período
+### ✅ [2º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/2%20Semestre)
 - **Algoritmos e Programação II**
 
 ### ✅ 3º Período
