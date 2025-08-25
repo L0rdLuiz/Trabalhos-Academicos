@@ -16,7 +16,7 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 ### ✅ [2º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/2%20Semestre)
 - **Algoritmos e Programação II**
 
-### ✅ 3º Período
+### ✅ [3º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/3%20Semestre)
 - **Estrutura de Dados**  
 - **Programação Orientada a Objetos**
 
