@@ -23,6 +23,7 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 ### ✅ [4º Período](https://github.com/L0rdLuiz/Trabalhos-Academicos/tree/main/4%20Semestre)
 - **Banco de Dados I**  
 - **Programação Web**
+- **Cálculo Numérico**
 
 ### 🔄 5º Período (atual)
 - **Banco de Dados II**  
