@@ -40,15 +40,15 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 
 ## 🛠️ Tecnologias e Linguagens
 Os projetos utilizam uma variedade de tecnologias e linguagens, conforme a disciplina, como:
-C++ → Desenvolvimento de algoritmos, lógica de programação e estruturas de dados.
-Java → Programação orientada a objetos e projetos acadêmicos.
-JavaScript → Interatividade em páginas web.
-HTML5 & CSS3 → Estruturação e estilização de páginas.
-PL/pgSQL → Criação de funções e procedimentos no PostgreSQL.
-MySQL → Modelagem e consultas em banco de dados relacional.
-MongoDB → Banco de dados NoSQL.
-pgAdmin → Administração e gerenciamento do PostgreSQL.
-Figma → Protótipos e design de interfaces.
+**C++** → Desenvolvimento de algoritmos, lógica de programação e estruturas de dados.
+**Java** → Programação orientada a objetos e projetos acadêmicos.
+**JavaScript** → Interatividade em páginas web.
+**HTML5 & CSS3** → Estruturação e estilização de páginas.
+**PL/pgSQL** → Criação de funções e procedimentos no PostgreSQL.
+**MySQL** → Modelagem e consultas em banco de dados relacional.
+**MongoDB** → Banco de dados NoSQL.
+**pgAdmin** → Administração e gerenciamento do PostgreSQL.
+**Figma** → Protótipos e design de interfaces.
 ---
 
 ## 🚀 Organização
