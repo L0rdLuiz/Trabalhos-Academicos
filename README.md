@@ -39,6 +39,7 @@ Aqui você encontrará códigos, exercícios, projetos e anotações relacionada
 ---
 
 ## 🛠️ Tecnologias e Linguagens
+
 Os projetos utilizam uma variedade de tecnologias e linguagens, conforme a disciplina, como:
 **C++** → Desenvolvimento de algoritmos, lógica de programação e estruturas de dados. <br>
 **Java** → Programação orientada a objetos e projetos acadêmicos. <br>
@@ -49,6 +50,7 @@ Os projetos utilizam uma variedade de tecnologias e linguagens, conforme a disci
 **MongoDB** → Banco de dados NoSQL. <br>
 **pgAdmin** → Administração e gerenciamento do PostgreSQL. <br>
 **Figma** → Protótipos e design de interfaces. <br>
+
 ---
 
 ## 🚀 Organização
