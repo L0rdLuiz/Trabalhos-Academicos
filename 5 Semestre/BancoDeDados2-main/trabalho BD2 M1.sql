@@ -67,32 +67,66 @@ select * from Clientes;
 select * from Pedidos;
 select * from Itens_pedido;
 
+//Exercício 3
 CREATE OR REPLACE FUNCTION atualizar_estoque()
 RETURNS TRIGGER AS
-$$ BEGIN
+$$
+DECLARE
+    v_status VARCHAR(50);
+    v_estoque_atual INT;
+BEGIN
+    SELECT status INTO v_status
+    FROM Pedidos
+    WHERE ID_pedido = NEW.ID_pedido;
 
-    IF NEW.status_item = 'Pendente' 
+    IF v_status = 'pendente' THEN
+        
+        SELECT quant_estoque INTO v_estoque_atual
+        FROM Livros
+        WHERE ID_livro = NEW.ID_livro;
 
-THEN 
+        IF v_estoque_atual < NEW.quantidade THEN
+            RAISE EXCEPTION 'Estoque insuficiente para o livro inserido';
+        END IF;
 
-IF(SELECT quantidade_estoque FROM livros WHERE id_livro = NEW.id_livro) < NEW.quantidade THEN 
-RAISE EXCEPTION 'Não consta no estoque % ', NEW.id_livro;
-END IF;
+        UPDATE Livros
+        SET quant_estoque = quant_estoque - NEW.quantidade
+        WHERE ID_livro = NEW.ID_livro;
+    END IF;
 
- UPDATE livros
-SET quantidade_estoque = quantidade_estoque - NEW.quantidade
-WHERE id_livro = NEW.id_livro;
-END IF;
-	
-RETURN NEW;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE TRIGGER tgr_atualizar_estoque
-after insert 
-on itens_pedido
-for each row
-execute function atualizar_estoque();
+AFTER INSERT
+ON Itens_pedido
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_estoque();
 
+-- 1) Ver estoque inicial dos livros
+SELECT * FROM Livros;
 
+-- 2) Criar um novo pedido para o cliente 1
+INSERT INTO Pedidos (ID_cliente) VALUES (1);
+
+-- O ID do pedido criado vai ser o próximo disponível (veja com SELECT)
+SELECT * FROM Pedidos ORDER BY ID_pedido DESC LIMIT 1;
+
+-- 3) Inserir item no pedido (estoque suficiente → deve funcionar)
+-- Exemplo: 1 unidade do livro ID 2 (Extraordinário)
+INSERT INTO Itens_pedido (ID_pedido, ID_livro, quantidade, preco_unitario)
+VALUES ( (SELECT MAX(ID_pedido) FROM Pedidos), 2, 1, 39.99 );
+
+-- 4) Conferir estoque atualizado
+SELECT * FROM Livros WHERE ID_livro = 2;
+
+-- 5) Testar inserção com quantidade maior que o estoque (vai dar erro)
+-- Exemplo: pedir 999 unidades de "Diário de um Banana I" (ID 4)
+INSERT INTO Itens_pedido (ID_pedido, ID_livro, quantidade, preco_unitario)
+VALUES ( (SELECT MAX(ID_pedido) FROM Pedidos), 4, 999, 48.90 );
+
+-- Esse último deve gerar: "Estoque insuficiente para o livro ID 4"
+
+-- 6) Conferir se nada foi alterado após o erro
+SELECT * FROM Livros WHERE ID_livro = 4;
