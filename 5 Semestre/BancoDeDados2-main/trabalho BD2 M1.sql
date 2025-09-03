@@ -66,3 +66,33 @@ select * from Livros;
 select * from Clientes;
 select * from Pedidos;
 select * from Itens_pedido;
+
+CREATE OR REPLACE FUNCTION atualizar_estoque()
+RETURNS TRIGGER AS
+$$ BEGIN
+
+    IF NEW.status_item = 'Pendente' 
+
+THEN 
+
+IF(SELECT quantidade_estoque FROM livros WHERE id_livro = NEW.id_livro) < NEW.quantidade THEN 
+RAISE EXCEPTION 'Não consta no estoque % ', NEW.id_livro;
+END IF;
+
+ UPDATE livros
+SET quantidade_estoque = quantidade_estoque - NEW.quantidade
+WHERE id_livro = NEW.id_livro;
+END IF;
+	
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER tgr_atualizar_estoque
+after insert 
+on itens_pedido
+for each row
+execute function atualizar_estoque();
+
+
