@@ -1,3 +1,6 @@
+-- =========================================
+-- Tabelas
+-- =========================================
 CREATE TABLE Livros (
 	ID_livro serial primary key, 
 	titulo text, 
@@ -19,12 +22,14 @@ CREATE TABLE Pedidos (
 	status VARCHAR(50) NOT NULL DEFAULT 'pendente'
 );
 
+-- Adicionei o campo status_item para o exercício 5
 CREATE TABLE Itens_pedido (
 	ID_item serial primary key,
 	ID_pedido int,
 	ID_livro int,
 	quantidade int,
-	preco_unitario numeric(6,2)
+	preco_unitario numeric(6,2),
+	status_item VARCHAR(50) DEFAULT 'Pendente'
 );
 
 CREATE TABLE Log_auditoria (
@@ -34,40 +39,36 @@ CREATE TABLE Log_auditoria (
 	operacao VARCHAR(100)
 );
 
+-- =========================================
+-- Inserts de teste
+-- =========================================
 INSERT INTO Livros (titulo, autor, preco, quant_estoque)
-values ('A Arte da Guerra', 'Sun Tzu', 12.49, 10),
-	   ('Extraordinário', 'R. J. Palacio', 39.99, 25),
-	   ('O cavaleiro preso na armadura', 'Robert Fischer', 32.77, 6),
-	   ('Diário de um Banana I', 'Jeff Kinney', 48.90, 55)
-	   
+VALUES 
+	('A Arte da Guerra', 'Sun Tzu', 12.49, 10),
+	('Extraordinário', 'R. J. Palacio', 39.99, 25),
+	('O cavaleiro preso na armadura', 'Robert Fischer', 32.77, 6),
+	('Diário de um Banana I', 'Jeff Kinney', 48.90, 55);
+
 INSERT INTO Clientes (nome, email)
-values ('Luiz', 'Luiz@gmail.com'),
-	   ('Isabela', 'Isabela@gmail.com'),
-	   ('Carlos', 'Carlos@gmail.com'),
-	   ('Felype', 'Felype@gmail.com')
-	   
-INSERT INTO Pedidos (ID_cliente)
-values (1)
-INSERT INTO Pedidos (ID_cliente)
-values (2)
-INSERT INTO Pedidos (ID_cliente)
-values (3)
-INSERT INTO Pedidos (ID_cliente)
-values (4)
+VALUES 
+	('Luiz', 'Luiz@gmail.com'),
+	('Isabela', 'Isabela@gmail.com'),
+	('Carlos', 'Carlos@gmail.com'),
+	('Felype', 'Felype@gmail.com');
+
+INSERT INTO Pedidos (ID_cliente) VALUES (1), (2), (3), (4);
 
 INSERT INTO Itens_pedido (ID_pedido, ID_livro, quantidade, preco_unitario)
-values (1, 3, 2, 32.77),
-	   (2, 1, 1, 12.49),
-	   (3, 4, 1, 48.90),
-	   (4, 2, 1, 39.99),
-	   (5, 1, 2, 12.49)
-	   
-select * from Livros;
-select * from Clientes;
-select * from Pedidos;
-select * from Itens_pedido;
+VALUES 
+	(1, 3, 2, 32.77),
+	(2, 1, 1, 12.49),
+	(3, 4, 1, 48.90),
+	(4, 2, 1, 39.99),
+	(4, 1, 2, 12.49);
 
-//Exercício 3
+-- =========================================
+-- Exercício 3: Atualizar estoque
+-- =========================================
 CREATE OR REPLACE FUNCTION atualizar_estoque()
 RETURNS TRIGGER AS
 $$
@@ -99,34 +100,63 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tgr_atualizar_estoque
-AFTER INSERT
-ON Itens_pedido
+AFTER INSERT ON Itens_pedido
 FOR EACH ROW
 EXECUTE FUNCTION atualizar_estoque();
 
--- 1) Ver estoque inicial dos livros
-SELECT * FROM Livros;
+-- =========================================
+-- Exercício 4: Impedir exclusão de cliente com pedidos
+-- =========================================
+CREATE OR REPLACE FUNCTION cliente_verificar_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+	IF EXISTS (SELECT 1 FROM Pedidos WHERE ID_cliente = OLD.ID_cliente) THEN
+		RAISE EXCEPTION 'Cliente não pode ser deletado pois efetuou pedido';
+	END IF;
 
--- 2) Criar um novo pedido para o cliente 1
-INSERT INTO Pedidos (ID_cliente) VALUES (1);
+	RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
 
--- O ID do pedido criado vai ser o próximo disponível (veja com SELECT)
-SELECT * FROM Pedidos ORDER BY ID_pedido DESC LIMIT 1;
+CREATE OR REPLACE TRIGGER cliente_delete_pedido
+BEFORE DELETE ON Clientes
+FOR EACH ROW
+EXECUTE FUNCTION cliente_verificar_delete();
 
--- 3) Inserir item no pedido (estoque suficiente → deve funcionar)
--- Exemplo: 1 unidade do livro ID 2 (Extraordinário)
-INSERT INTO Itens_pedido (ID_pedido, ID_livro, quantidade, preco_unitario)
-VALUES ( (SELECT MAX(ID_pedido) FROM Pedidos), 2, 1, 39.99 );
+-- Teste do exercício 4
+DELETE FROM Clientes WHERE ID_cliente = 1;
 
--- 4) Conferir estoque atualizado
-SELECT * FROM Livros WHERE ID_livro = 2;
+-- =========================================
+-- Exercício 5: Atualizar status do pedido quando itens forem enviados
+-- =========================================
+CREATE OR REPLACE FUNCTION att_status_enviado()
+RETURNS TRIGGER AS $$
+BEGIN
+	-- Quando o status de um item for atualizado para 'Enviado',
+	-- o pedido correspondente passa para 'Concluido'
+	IF NEW.status_item = 'Enviado' THEN
+		UPDATE Pedidos 
+		SET status = 'Concluido' 
+		WHERE ID_pedido = NEW.ID_pedido;
+	END IF;
 
--- 5) Testar inserção com quantidade maior que o estoque (vai dar erro)
--- Exemplo: pedir 999 unidades de "Diário de um Banana I" (ID 4)
-INSERT INTO Itens_pedido (ID_pedido, ID_livro, quantidade, preco_unitario)
-VALUES ( (SELECT MAX(ID_pedido) FROM Pedidos), 4, 999, 48.90 );
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Esse último deve gerar: "Estoque insuficiente para o livro ID 4"
+CREATE OR REPLACE TRIGGER att_status_pedido
+AFTER UPDATE OF status_item ON Itens_pedido
+FOR EACH ROW
+EXECUTE FUNCTION att_status_enviado();
 
--- 6) Conferir se nada foi alterado após o erro
-SELECT * FROM Livros WHERE ID_livro = 4;
+-- Teste do exercício 5
+SELECT * FROM Itens_pedido;
+SELECT * FROM Pedidos;
+
+-- Atualizar um item para 'Enviado'
+UPDATE Itens_pedido 
+SET status_item = 'Enviado' 
+WHERE ID_item = 4;
+
+-- Conferir se o pedido foi atualizado
+SELECT * FROM Pedidos WHERE ID_pedido = 4;
