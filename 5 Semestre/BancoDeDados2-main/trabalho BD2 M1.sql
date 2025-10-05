@@ -182,6 +182,156 @@ AFTER UPDATE OF status_item ON Itens_pedido
 FOR EACH ROW
 EXECUTE FUNCTION att_status_enviado();
 
+-- EXERCÍCIO 6 - RELATÓRIO DE VENDAS POR CLIENTE
+
+CREATE OR REPLACE PROCEDURE relatorio_vendas_cliente(p_id_cliente INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_nome_cliente TEXT;
+    v_total_pedidos INT;
+    v_total_gasto NUMERIC(10,2);
+BEGIN
+    SELECT nome INTO v_nome_cliente
+    FROM Clientes
+    WHERE id_cliente = p_id_cliente;
+
+    IF v_nome_cliente IS NULL THEN
+        RAISE NOTICE 'Cliente com ID % não encontrado.', p_id_cliente;
+        RETURN;
+    END IF;
+
+    SELECT COUNT(*) INTO v_total_pedidos
+    FROM Pedidos
+    WHERE id_cliente = p_id_cliente;
+
+    SELECT COALESCE(SUM(ip.quantidade * ip.preco_unitario), 0)
+    INTO v_total_gasto
+    FROM Itens_pedido ip
+    JOIN Pedidos p ON p.id_pedido = ip.id_pedido
+    WHERE p.id_cliente = p_id_cliente;
+
+    RAISE NOTICE 'Cliente: %', v_nome_cliente;
+    RAISE NOTICE 'Total de pedidos: %', v_total_pedidos;
+    RAISE NOTICE 'Valor total gasto: R$ %', v_total_gasto;
+END;
+$$;
+
+-- Exemplo de uso:
+CALL relatorio_vendas_cliente(1);
+
+-- EXERCÍCIO 7 - REPOSIÇÃO DE ESTOQUE
+
+CREATE OR REPLACE PROCEDURE repor_estoque(p_id_livro INT, p_quantidade INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_estoque_anterior INT;
+BEGIN
+    SELECT quant_estoque INTO v_estoque_anterior
+    FROM Livros
+    WHERE id_livro = p_id_livro;
+
+    IF v_estoque_anterior IS NULL THEN
+        RAISE NOTICE 'Livro com ID % não encontrado.', p_id_livro;
+        RETURN;
+    END IF;
+
+    UPDATE Livros
+    SET quant_estoque = quant_estoque + p_quantidade
+    WHERE id_livro = p_id_livro;
+
+    INSERT INTO Log_auditoria (tabela_afetada, id_registro_afetado, operacao, detalhes)
+    VALUES (
+        'Livros',
+        p_id_livro,
+        'REPOSICAO_ESTOQUE',
+        'Estoque aumentado de ' || v_estoque_anterior || ' para ' || (v_estoque_anterior + p_quantidade)
+    );
+
+    RAISE NOTICE 'Reposição concluída com sucesso. Livro ID: %, Estoque atual: %',
+                 p_id_livro, (v_estoque_anterior + p_quantidade);
+END;
+$$;
+
+-- Exemplo de uso:
+CALL repor_estoque(3, 10);
+
+-- EXERCÍCIO 8 - CANCELAMENTO DE PEDIDO
+
+CREATE OR REPLACE PROCEDURE cancelar_pedido(p_id_pedido INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_livro INT;
+    v_quantidade INT;
+    v_data_atual TIMESTAMP := NOW();
+BEGIN
+    UPDATE Pedidos
+    SET status = 'Cancelado'
+    WHERE id_pedido = p_id_pedido;
+
+    IF NOT FOUND THEN
+        RAISE NOTICE 'Pedido com ID % não encontrado.', p_id_pedido;
+        RETURN;
+    END IF;
+
+    FOR v_id_livro, v_quantidade IN
+        SELECT id_livro, quantidade
+        FROM Itens_pedido
+        WHERE id_pedido = p_id_pedido
+    LOOP
+        UPDATE Livros
+        SET quant_estoque = quant_estoque + v_quantidade
+        WHERE id_livro = v_id_livro;
+    END LOOP;
+
+    INSERT INTO Log_auditoria (tabela_afetada, id_registro_afetado, operacao, data_hora, detalhes)
+    VALUES ('Pedidos', p_id_pedido, 'CANCELAMENTO_PEDIDO', v_data_atual, 'Pedido cancelado e estoque reposto.');
+
+    RAISE NOTICE 'Pedido % cancel
+
+-- EXERCÍCIO 9 - RANKING DE LIVROS MAIS VENDIDOS
+
+CREATE OR REPLACE PROCEDURE ranking_livros_vendidos(p_mes INT, p_ano INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_livro RECORD;
+BEGIN
+    RAISE NOTICE 'Ranking de Livros Mais Vendidos - Mês: % / Ano: %', p_mes, p_ano;
+    RAISE NOTICE '----------------------------------------------------';
+
+    FOR v_livro IN
+        SELECT
+            l.titulo,
+            l.autor,
+            SUM(ip.quantidade) AS total_vendido
+        FROM
+            Pedidos p
+        JOIN
+            Itens_pedido ip ON p.id_pedido = ip.id_pedido
+        JOIN
+            Livros l ON ip.id_livro = l.id_livro
+        WHERE
+            EXTRACT(MONTH FROM p.data_pedido) = p_mes
+            AND EXTRACT(YEAR FROM p.data_pedido) = p_ano
+            AND p.status = 'Concluido'
+        GROUP BY
+            l.titulo, l.autor
+        ORDER BY
+            total_vendido DESC
+        LIMIT 5
+    LOOP
+        RAISE NOTICE 'Título: %, Autor: %, Quantidade Vendida: %',
+            v_livro.titulo, v_livro.autor, v_livro.total_vendido;
+    END LOOP;
+END;
+$$;
+
+-- Exemplo de uso:
+-- CALL ranking_livros_vendidos(10, 2025);
+
 -- CONSULTAS DE TESTE
 SELECT * FROM Livros;
 SELECT * FROM Clientes;
