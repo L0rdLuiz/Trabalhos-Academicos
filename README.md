@@ -50,6 +50,7 @@ Os projetos utilizam uma variedade de tecnologias e linguagens, conforme a disci
 **MongoDB** → Banco de dados NoSQL. <br>
 **pgAdmin** → Administração e gerenciamento do PostgreSQL. <br>
 **Figma** → Protótipos e design de interfaces. <br>
+**Kotlin** → Aplicativos
 
 ---
 
